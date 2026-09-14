@@ -1,5 +1,5 @@
-import { RazorpayPaymentProvider } from "../apps/api/src/modules/payments/providers/razorpay-payment.provider";
-import { PaymentsService } from "../apps/api/src/modules/payments/payments.service";
+import { RazorpayPaymentProvider } from "../src/modules/payments/providers/razorpay-payment.provider";
+import { PaymentsService } from "../src/modules/payments/payments.service";
 import {
   PaymentTransactionStatus,
   OrderStatus,

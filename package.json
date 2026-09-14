@@ -1,50 +1,57 @@
 {
-  "name": "family-vaishno-dhaba",
-  "version": "0.1.0",
+  "name": "family-vaishno-dhaba-backend",
+  "version": "1.0.0",
   "private": true,
-  "description": "Production-grade online food ordering platform for Family Vaishno Dhaba (Punjabi & Himachali Cuisine)",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "description": "Production NestJS / Node.js Backend API for Family Vaishno Dhaba",
   "scripts": {
+    "prebuild": "prisma generate",
+    "build": "prisma generate && tsc -p tsconfig.json",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "start": "node dist/main.js",
+    "start:dev": "tsx watch src/main.ts",
+    "start:prod": "node dist/main.js",
+    "dev": "tsx watch src/main.ts",
+    "lint": "tsc --noEmit",
+    "type-check": "tsc --noEmit",
     "postinstall": "prisma generate",
-    "build": "prisma generate && turbo run build",
-    "dev": "turbo run dev --parallel",
-    "dev:api": "turbo run dev --filter=@repo/api",
-    "dev:admin": "turbo run dev --filter=@repo/admin",
-    "start:api": "turbo run dev --filter=@repo/api",
-    "lint": "turbo run lint",
-    "type-check": "turbo run type-check",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "db:up": "docker compose up -d",
-    "db:down": "docker compose down",
-    "db:logs": "docker compose logs -f postgres",
-    "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
-    "db:studio": "prisma studio",
     "db:seed": "prisma db seed",
     "db:deploy": "prisma db push && prisma db seed"
-  },
-  "devDependencies": {
-    "@types/node": "^22.13.5",
-    "prettier": "^3.5.1",
-    "prisma": "^6.4.1",
-    "tsx": "^4.19.3",
-    "turbo": "^2.4.4",
-    "typescript": "^5.7.3"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.4.1"
+    "@nestjs/common": "^11.0.10",
+    "@nestjs/config": "^4.0.0",
+    "@nestjs/core": "^11.0.10",
+    "@nestjs/platform-express": "^11.0.10",
+    "@nestjs/terminus": "^11.0.0",
+    "@nestjs/throttler": "^6.4.0",
+    "@prisma/client": "^6.4.1",
+    "argon2": "^0.41.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "helmet": "^8.0.0",
+    "otplib": "^12.0.1",
+    "qrcode": "^1.5.4",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
   },
-  "packageManager": "npm@10.9.8",
-  "engines": {
-    "node": ">=20.0.0",
-    "npm": ">=10.0.0"
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.5",
+    "@nestjs/schematics": "^11.0.2",
+    "@types/cookie-parser": "^1.4.8",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.5",
+    "@types/qrcode": "^1.5.5",
+    "prettier": "^3.5.1",
+    "prisma": "^6.4.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
   }
 }

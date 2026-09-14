@@ -1,8 +1,10 @@
-import { PrismaClient, RegionalCuisine, OrderType, PaymentMethod, OrderStatus, PaymentStatus } from "@prisma/client";
-import { OrdersService } from "../apps/api/src/modules/orders/orders.service";
-import { MenuService } from "../apps/api/src/modules/menu/menu.service";
-import { PaymentsService } from "../apps/api/src/modules/payments/payments.service";
-import { RazorpayPaymentProvider } from "../apps/api/src/modules/payments/providers/razorpay-payment.provider";
+import { PrismaClient, RegionalCuisine, PaymentMethod, OrderStatus, PaymentStatus } from "@prisma/client";
+import { OrderType, CreateOrderDto } from "../src/types";
+import { OrdersService } from "../src/modules/orders/orders.service";
+import { MenuService } from "../src/modules/menu/menu.service";
+import { PaymentsService } from "../src/modules/payments/payments.service";
+import { RazorpayPaymentProvider } from "../src/modules/payments/providers/razorpay-payment.provider";
+import { VerificationService } from "../src/modules/verification/verification.service";
 import * as crypto from "crypto";
 
 const prisma = new PrismaClient();
@@ -39,9 +41,10 @@ async function runVerification() {
   try {
     const menuService = new MenuService(prisma as any);
     const mockConfig = new MockConfigService();
+    const verificationService = new VerificationService(prisma as any, mockConfig as any);
     const razorpayProvider = new RazorpayPaymentProvider(mockConfig as any);
     const paymentsService = new PaymentsService(prisma as any, razorpayProvider);
-    const ordersService = new OrdersService(prisma as any, paymentsService);
+    const ordersService = new OrdersService(prisma as any, verificationService);
 
     // Test 1: Category Listing
     console.log("1. Testing Category Service...");

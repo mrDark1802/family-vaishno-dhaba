@@ -1,9 +1,9 @@
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
-import { CouponsService } from "../apps/api/src/modules/coupons/coupons.service";
-import { OrdersService } from "../apps/api/src/modules/orders/orders.service";
-import { VerificationService } from "../apps/api/src/modules/verification/verification.service";
-import { PrismaService } from "../apps/api/src/database/prisma.service";
+import { CouponsService } from "../src/modules/coupons/coupons.service";
+import { OrdersService } from "../src/modules/orders/orders.service";
+import { VerificationService } from "../src/modules/verification/verification.service";
+import { PrismaService } from "../src/database/prisma.service";
 import { OrderType, PaymentMethod } from "@repo/types";
 
 async function runVerification() {

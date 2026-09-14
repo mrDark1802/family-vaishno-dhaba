@@ -1,5 +1,5 @@
-import { OrdersService } from "../apps/api/src/modules/orders/orders.service";
-import { CreateOrderDto } from "../apps/api/src/modules/orders/dto/create-order.dto";
+import { OrdersService } from "../src/modules/orders/orders.service";
+import { CreateOrderDto } from "../src/modules/orders/dto/create-order.dto";
 import {
   OrderType,
   PaymentMethod,

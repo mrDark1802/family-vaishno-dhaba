@@ -1,7 +1,7 @@
-import { AddressesService } from "../apps/api/src/modules/addresses/addresses.service";
-import { OrdersService } from "../apps/api/src/modules/orders/orders.service";
-import { CreateAddressDto } from "../apps/api/src/modules/addresses/dto/create-address.dto";
-import { CreateOrderDto } from "../apps/api/src/modules/orders/dto/create-order.dto";
+import { AddressesService } from "../src/modules/addresses/addresses.service";
+import { OrdersService } from "../src/modules/orders/orders.service";
+import { CreateAddressDto } from "../src/modules/addresses/dto/create-address.dto";
+import { CreateOrderDto } from "../src/modules/orders/dto/create-order.dto";
 import {
   OrderType,
   PaymentMethod,

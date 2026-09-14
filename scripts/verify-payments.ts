@@ -11,8 +11,8 @@
  * 7. Webhook signature verification, amount verification, and webhook idempotency.
  */
 
-import { PaymentsService } from "../apps/api/src/modules/payments/payments.service";
-import { MockPaymentProvider } from "../apps/api/src/modules/payments/providers/mock-payment.provider";
+import { PaymentsService } from "../src/modules/payments/payments.service";
+import { MockPaymentProvider } from "../src/modules/payments/providers/mock-payment.provider";
 import { ConfigService } from "@nestjs/config";
 import {
   Prisma,

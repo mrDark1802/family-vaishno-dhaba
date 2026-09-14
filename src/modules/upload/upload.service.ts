@@ -1,5 +1,5 @@
-import { Injectable, Logger, BadRequestException } from "@nestjs/common";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { Injectable, Logger, BadRequestException, NotFoundException } from "@nestjs/common";
+import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 
 export interface UploadResult {
   url: string;
@@ -24,9 +24,10 @@ export class UploadService {
     const secretAccessKey =
       process.env.R2_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
     this.bucketName = process.env.R2_BUCKET_NAME || "fvd-dhaba";
+    const apiUrl = (process.env.API_URL || "https://family-vaishno-dhaba.vercel.app").replace(/\/+$/, "");
     this.publicUrlBase = (
       process.env.R2_PUBLIC_URL ||
-      `https://0bfb1e2b55a21851024948866d0d0563.r2.cloudflarestorage.com/${this.bucketName}`
+      `${apiUrl}/api/upload/view`
     ).replace(/\/+$/, "");
 
     if (accessKeyId && secretAccessKey) {
@@ -120,6 +121,32 @@ export class UploadService {
 
     const buffer = Buffer.from(pureBase64, "base64");
     return this.uploadBuffer(buffer, filename, mimeType, folder);
+  }
+
+  /**
+   * Fetch object from Cloudflare R2 as a readable stream
+   */
+  async getObjectStream(
+    key: string,
+  ): Promise<{ stream: any; contentType: string; contentLength?: number }> {
+    if (!this.s3Client) {
+      throw new NotFoundException("Storage client not initialized.");
+    }
+    try {
+      const command = new GetObjectCommand({
+        Bucket: this.bucketName,
+        Key: key,
+      });
+      const response = await this.s3Client.send(command);
+      return {
+        stream: response.Body,
+        contentType: response.ContentType || "image/jpeg",
+        contentLength: response.ContentLength,
+      };
+    } catch (err: any) {
+      this.logger.error(`Failed to fetch object ${key} from R2:`, err);
+      throw new NotFoundException(`Asset '${key}' not found in storage.`);
+    }
   }
 
   private getExtensionFromMime(mimeType: string): string {

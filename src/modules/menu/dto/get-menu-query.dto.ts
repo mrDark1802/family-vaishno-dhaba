@@ -44,5 +44,13 @@ export class GetMenuQueryDto {
   @Transform(({ value }) => value === "true" || value === true || value === 1 || value === "1")
   @IsBoolean()
   isChefSpecial?: boolean;
+
+  @IsOptional()
+  @Transform(({ value }) => (value !== undefined && value !== null ? Number(value) : undefined))
+  page?: number;
+
+  @IsOptional()
+  @Transform(({ value }) => (value !== undefined && value !== null ? Number(value) : undefined))
+  limit?: number;
 }
 

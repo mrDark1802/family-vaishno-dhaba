@@ -217,6 +217,11 @@ export class MenuService {
       ];
     }
 
+    const page = query.page && query.page > 0 ? query.page : undefined;
+    const limit = query.limit && query.limit > 0 ? query.limit : undefined;
+    const skip = page && limit ? (page - 1) * limit : page ? (page - 1) * 10 : undefined;
+    const take = limit;
+
     const items = await this.prisma.product.findMany({
       where,
       include: {
@@ -227,6 +232,8 @@ export class MenuService {
         { displayOrder: "asc" },
         { name: "asc" },
       ],
+      ...(skip !== undefined ? { skip } : {}),
+      ...(take !== undefined ? { take } : {}),
     });
 
     return items.map((item) => this.mapProductToSummary(item));

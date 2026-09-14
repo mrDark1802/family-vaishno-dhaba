@@ -44,6 +44,7 @@ export class MenuService {
       slug: cat.slug,
       description: cat.description,
       icon: cat.icon,
+      imageUrl: (cat as any).imageUrl || null,
       featured: cat.featured,
       displayOrder: cat.displayOrder,
       isActive: cat.isActive,
@@ -59,6 +60,7 @@ export class MenuService {
     slug?: string;
     description?: string;
     icon?: string;
+    imageUrl?: string;
     featured?: boolean;
     displayOrder?: number;
     isActive?: boolean;
@@ -76,6 +78,7 @@ export class MenuService {
         slug,
         description: data.description?.trim() || null,
         icon: data.icon?.trim() || "🍲",
+        imageUrl: data.imageUrl?.trim() || null,
         featured: data.featured ?? false,
         displayOrder: data.displayOrder ?? 0,
         isActive: data.isActive ?? true,
@@ -88,6 +91,7 @@ export class MenuService {
       slug: created.slug,
       description: created.description,
       icon: created.icon,
+      imageUrl: (created as any).imageUrl || null,
       featured: created.featured,
       displayOrder: created.displayOrder,
       isActive: created.isActive,

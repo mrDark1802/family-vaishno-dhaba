@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: fvd_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-fvd_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fvd_secure_password_dev_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-fvd_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fvd_admin} -d ${POSTGRES_DB:-fvd_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    name: fvd_postgres_data

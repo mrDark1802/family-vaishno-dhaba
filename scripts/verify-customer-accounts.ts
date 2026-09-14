@@ -7,7 +7,7 @@ import {
   PaymentMethod,
   OrderStatus,
   PaymentStatus,
-} from "@repo/types";
+} from "../src/types";
 import { Prisma } from "@prisma/client";
 
 // In-Memory Mock Database for Addresses & Orders Verification

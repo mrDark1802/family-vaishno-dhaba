@@ -19,7 +19,7 @@ import {
   CreateProductDto,
   UpdateProductDto,
   CreateCategoryDto,
-} from "@repo/types";
+} from "../../types";
 import { OptionalAuthGuard } from "../../common/guards/optional-auth.guard";
 
 @Controller("menu")

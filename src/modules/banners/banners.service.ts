@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Banner, CreateBannerDto, UpdateBannerDto, UiSettings } from "@repo/types";
+import { Banner, CreateBannerDto, UpdateBannerDto, UiSettings } from "../../types";
 
 @Injectable()
 export class BannersService {

@@ -32,7 +32,7 @@ import {
   TwoFactorSetupResponse,
   TwoFactorStatusResponse,
   ConnectedAccountsResponse,
-} from "@repo/types";
+} from "../../types";
 import { Throttle } from "@nestjs/throttler";
 import { Request, Response } from "express";
 

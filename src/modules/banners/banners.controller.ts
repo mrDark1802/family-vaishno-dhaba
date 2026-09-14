@@ -12,7 +12,7 @@ import {
   HttpStatus,
 } from "@nestjs/common";
 import { BannersService } from "./banners.service";
-import { Banner, CreateBannerDto, UpdateBannerDto, UiSettings } from "@repo/types";
+import { Banner, CreateBannerDto, UpdateBannerDto, UiSettings } from "../../types";
 import { OptionalAuthGuard } from "../../common/guards/optional-auth.guard";
 
 @Controller("banners")

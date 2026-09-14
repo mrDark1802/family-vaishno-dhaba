@@ -12,7 +12,7 @@ import { AuthService } from "./auth.service";
 import { TwoFactorService } from "./two-factor.service";
 import * as crypto from "crypto";
 import { UserRole as PrismaUserRole } from "@prisma/client";
-import { ConnectedAccountsResponse } from "@repo/types";
+import { ConnectedAccountsResponse } from "../../types";
 
 export interface GoogleProfile {
   sub: string;

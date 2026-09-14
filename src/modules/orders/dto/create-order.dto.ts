@@ -16,9 +16,9 @@ import {
   IsEmail,
 } from "class-validator";
 import { Type } from "class-transformer";
-import { OrderType, PaymentMethod } from "@repo/types";
+import { OrderType, PaymentMethod } from "../../../types";
 
-import { PortionOption } from "@repo/types";
+import { PortionOption } from "../../../types";
 
 export class CreateOrderItemDto {
   @IsString()

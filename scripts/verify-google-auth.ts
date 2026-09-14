@@ -1,5 +1,5 @@
 import * as crypto from "crypto";
-import { UserRole } from "@repo/types";
+import { UserRole } from "../src/types";
 
 // Replicate GoogleAuthService security & business logic for standalone verification
 class MockGoogleAuthService {

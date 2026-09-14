@@ -8,7 +8,7 @@ import {
   CreateProductDto,
   UpdateProductDto,
   RegionalCuisine,
-} from "@repo/types";
+} from "../../types";
 import { Prisma } from "@prisma/client";
 
 @Injectable()

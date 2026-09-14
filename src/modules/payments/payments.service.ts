@@ -24,7 +24,7 @@ import {
   PaymentVerificationResponse,
   WebhookEventResult,
   PaymentTransactionStatus,
-} from "@repo/types";
+} from "../../types";
 
 @Injectable()
 export class PaymentsService {

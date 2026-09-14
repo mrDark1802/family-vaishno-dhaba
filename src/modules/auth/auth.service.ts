@@ -10,7 +10,7 @@ import { PrismaService } from "../../database/prisma.service";
 import { TwoFactorService } from "./two-factor.service";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
-import { CustomerProfile, UserRole } from "@repo/types";
+import { CustomerProfile, UserRole } from "../../types";
 import * as argon2 from "argon2";
 import * as crypto from "crypto";
 import { User, UserRole as PrismaUserRole } from "@prisma/client";

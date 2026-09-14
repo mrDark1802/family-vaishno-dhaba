@@ -18,7 +18,7 @@ import {
   ValidateCouponDto,
   CouponSummary,
   CouponValidationResult,
-} from "@repo/types";
+} from "../../types";
 import { OptionalAuthGuard } from "../../common/guards/optional-auth.guard";
 
 @Controller("coupons")

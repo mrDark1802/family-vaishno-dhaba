@@ -16,7 +16,7 @@ import { CreateAddressDto } from "./dto/create-address.dto";
 import { UpdateAddressDto } from "./dto/update-address.dto";
 import { AuthGuard } from "../../common/guards/auth.guard";
 import { CurrentUser } from "../../common/decorators/current-user.decorator";
-import { CustomerProfile, AddressResponse } from "@repo/types";
+import { CustomerProfile, AddressResponse } from "../../types";
 
 @Controller("addresses")
 @UseGuards(AuthGuard)

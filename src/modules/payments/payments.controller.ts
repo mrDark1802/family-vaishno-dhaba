@@ -20,7 +20,7 @@ import {
   CustomerProfile,
   PaymentResponse,
   PaymentVerificationResponse,
-} from "@repo/types";
+} from "../../types";
 
 @Controller("payments")
 export class PaymentsController {

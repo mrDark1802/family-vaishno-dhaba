@@ -14,7 +14,7 @@ import {
   TwoFactorSetupResponse,
   TwoFactorStatusResponse,
   UserRole,
-} from "@repo/types";
+} from "../../types";
 
 // Configure otplib for standard 30s step and small window tolerance
 authenticator.options = {

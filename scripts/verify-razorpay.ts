@@ -4,7 +4,7 @@ import {
   PaymentTransactionStatus,
   OrderStatus,
   PaymentStatus,
-} from "@repo/types";
+} from "../src/types";
 import { Prisma } from "@prisma/client";
 import * as crypto from "crypto";
 

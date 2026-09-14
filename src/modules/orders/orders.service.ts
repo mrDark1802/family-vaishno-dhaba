@@ -15,7 +15,7 @@ import {
   PaymentStatus,
   OrderSummary,
   PortionOption,
-} from "@repo/types";
+} from "../../types";
 import * as crypto from "crypto";
 
 import { VerificationService } from "../verification/verification.service";

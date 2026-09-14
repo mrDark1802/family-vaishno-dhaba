@@ -7,7 +7,7 @@ import {
 import { PrismaService } from "../../database/prisma.service";
 import { CreateAddressDto } from "./dto/create-address.dto";
 import { UpdateAddressDto } from "./dto/update-address.dto";
-import { AddressResponse } from "@repo/types";
+import { AddressResponse } from "../../types";
 
 @Injectable()
 export class AddressesService {

@@ -9,7 +9,7 @@ import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "../../database/prisma.service";
 import { Prisma } from "@prisma/client";
 import * as crypto from "crypto";
-import { OtpSendResponse, OtpVerifyResponse } from "@repo/types";
+import { OtpSendResponse, OtpVerifyResponse } from "../../types";
 
 @Injectable()
 export class VerificationService {

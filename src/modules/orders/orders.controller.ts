@@ -23,7 +23,7 @@ import {
   OrderStatus,
   PaginatedOrderResponse,
   UpdateOrderStatusDto,
-} from "@repo/types";
+} from "../../types";
 
 @Controller("orders")
 export class OrdersController {

@@ -1,7 +1,7 @@
 import { VerificationService } from "../src/modules/verification/verification.service";
 import { OrdersService } from "../src/modules/orders/orders.service";
 import { CreateOrderDto } from "../src/modules/orders/dto/create-order.dto";
-import { OrderType, PaymentMethod, OrderStatus, PaymentStatus } from "@repo/types";
+import { OrderType, PaymentMethod, OrderStatus, PaymentStatus } from "../src/types";
 import { Prisma } from "@prisma/client";
 
 // Mock Config Service

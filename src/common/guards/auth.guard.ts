@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "../../database/prisma.service";
 import * as crypto from "crypto";
-import { CustomerProfile, UserRole } from "@repo/types";
+import { CustomerProfile, UserRole } from "../../types";
 
 @Injectable()
 export class AuthGuard implements CanActivate {

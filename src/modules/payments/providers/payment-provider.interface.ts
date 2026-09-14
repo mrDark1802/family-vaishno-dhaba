@@ -1,4 +1,4 @@
-import { PaymentTransactionStatus, WebhookEventResult } from "@repo/types";
+import { PaymentTransactionStatus, WebhookEventResult } from "../../../types";
 
 export interface CreatePaymentParams {
   orderId: string;

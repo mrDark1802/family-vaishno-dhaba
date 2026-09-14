@@ -9,7 +9,7 @@ import { Throttle } from "@nestjs/throttler";
 import { VerificationService } from "./verification.service";
 import { SendOtpDto } from "./dto/send-otp.dto";
 import { VerifyOtpDto } from "./dto/verify-otp.dto";
-import { OtpSendResponse, OtpVerifyResponse } from "@repo/types";
+import { OtpSendResponse, OtpVerifyResponse } from "../../types";
 
 @Controller("verification")
 export class VerificationController {

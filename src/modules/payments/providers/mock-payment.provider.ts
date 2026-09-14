@@ -9,7 +9,7 @@ import {
   PaymentVerificationResult,
   WebhookEventResult,
 } from "./payment-provider.interface";
-import { PaymentTransactionStatus } from "@repo/types";
+import { PaymentTransactionStatus } from "../../../types";
 
 @Injectable()
 export class MockPaymentProvider implements PaymentProvider {

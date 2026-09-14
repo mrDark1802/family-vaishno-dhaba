@@ -11,7 +11,7 @@ import {
   CreateCouponDto,
   UpdateCouponDto,
   CouponValidationResult,
-} from "@repo/types";
+} from "../../types";
 
 @Injectable()
 export class CouponsService {

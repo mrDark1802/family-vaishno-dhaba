@@ -4,7 +4,7 @@ import { CouponsService } from "../src/modules/coupons/coupons.service";
 import { OrdersService } from "../src/modules/orders/orders.service";
 import { VerificationService } from "../src/modules/verification/verification.service";
 import { PrismaService } from "../src/database/prisma.service";
-import { OrderType, PaymentMethod } from "@repo/types";
+import { OrderType, PaymentMethod } from "../src/types";
 
 async function runVerification() {
   console.log("🧪 Initializing Direct Services Verification...");

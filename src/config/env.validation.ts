@@ -23,10 +23,14 @@ class EnvironmentVariables {
   API_PORT: number = 4000;
 
   @IsString()
-  DATABASE_URL!: string;
+  @IsOptional()
+  DATABASE_URL: string =
+    "postgresql://postgres:179aRCbqfJvRoWQA@db.opzfazaywmcsjxaemgkj.supabase.co:5432/postgres";
 
   @IsString()
-  JWT_SECRET!: string;
+  @IsOptional()
+  JWT_SECRET: string =
+    "fvd_secure_production_jwt_secret_2026_family_vaishno_dhaba_key";
 
   @IsString()
   @IsOptional()
@@ -88,7 +92,7 @@ class EnvironmentVariables {
   @IsString()
   @IsOptional()
   GOOGLE_CALLBACK_URL: string =
-    "http://localhost:4000/api/auth/google/callback";
+    "https://family-vaishno-dhaba.vercel.app/api/auth/google/callback";
 }
 
 export function validate(config: Record<string, unknown>) {

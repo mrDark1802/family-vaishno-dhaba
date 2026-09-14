@@ -44,27 +44,11 @@ async function bootstrap() {
   // Cookie Parser for HTTP-only cookies
   app.use(cookieParser(cookieSecret));
 
-  // CORS Configuration
+  // CORS Configuration - Permissive for Web, Mobile, Electron, Vercel
   app.enableCors({
-    origin: (
-      origin: string | undefined,
-      callback: (err: Error | null, allow?: boolean) => void,
-    ) => {
-      // Allow requests with no origin (like mobile apps or curl/Postman)
-      // or allowed origins, or any localhost / 127.0.0.1 port in non-production
-      if (
-        !origin ||
-        allowedOrigins.includes(origin) ||
-        (process.env.NODE_ENV !== "production" &&
-          /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin))
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error(`CORS blocked for origin: ${origin}`));
-      }
-    },
+    origin: true,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
     allowedHeaders: [
       "Content-Type",
       "Authorization",

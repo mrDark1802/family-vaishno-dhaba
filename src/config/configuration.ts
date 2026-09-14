@@ -44,4 +44,13 @@ export default () => ({
       process.env.GOOGLE_CALLBACK_URL ||
       "https://family-vaishno-dhaba.vercel.app/api/auth/google/callback",
   },
+  storage: {
+    r2BucketUrl:
+      process.env.CLOUDFLARE_R2_BUCKET_URL ||
+      "https://0bfb1e2b55a21851024948866d0d0563.r2.cloudflarestorage.com/fvd-dhaba",
+    r2AccountId:
+      process.env.CLOUDFLARE_R2_ACCOUNT_ID || "0bfb1e2b55a21851024948866d0d0563",
+    r2BucketName: process.env.CLOUDFLARE_R2_BUCKET_NAME || "fvd-dhaba",
+  },
 });
+

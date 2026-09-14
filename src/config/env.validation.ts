@@ -93,6 +93,19 @@ class EnvironmentVariables {
   @IsOptional()
   GOOGLE_CALLBACK_URL: string =
     "https://family-vaishno-dhaba.vercel.app/api/auth/google/callback";
+
+  @IsString()
+  @IsOptional()
+  CLOUDFLARE_R2_BUCKET_URL: string =
+    "https://0bfb1e2b55a21851024948866d0d0563.r2.cloudflarestorage.com/fvd-dhaba";
+
+  @IsString()
+  @IsOptional()
+  CLOUDFLARE_R2_ACCOUNT_ID: string = "0bfb1e2b55a21851024948866d0d0563";
+
+  @IsString()
+  @IsOptional()
+  CLOUDFLARE_R2_BUCKET_NAME: string = "fvd-dhaba";
 }
 
 export function validate(config: Record<string, unknown>) {

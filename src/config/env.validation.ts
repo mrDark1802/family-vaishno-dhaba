@@ -25,7 +25,7 @@ class EnvironmentVariables {
   @IsString()
   @IsOptional()
   DATABASE_URL: string =
-    "postgresql://postgres:179aRCbqfJvRoWQA@db.opzfazaywmcsjxaemgkj.supabase.co:5432/postgres";
+    "postgresql://postgres.opzfazaywmcsjxaemgkj:179aRCbqfJvRoWQA@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true";
 
   @IsString()
   @IsOptional()

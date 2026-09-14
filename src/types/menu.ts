@@ -23,6 +23,7 @@ export interface CategorySummary {
   slug: string;
   description?: string | null;
   icon?: string | null;
+  imageUrl?: string | null;
   featured?: boolean;
   displayOrder: number;
   isActive: boolean;
@@ -34,6 +35,7 @@ export interface CreateCategoryDto {
   slug?: string;
   description?: string;
   icon?: string;
+  imageUrl?: string | null;
   featured?: boolean;
   displayOrder?: number;
   isActive?: boolean;

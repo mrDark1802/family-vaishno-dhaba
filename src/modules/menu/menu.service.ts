@@ -121,6 +121,59 @@ export class MenuService {
 
 
   /**
+   * Admin: Update category
+   */
+  async updateCategory(
+    id: string,
+    data: {
+      name?: string;
+      slug?: string;
+      description?: string;
+      icon?: string;
+      imageUrl?: string;
+      featured?: boolean;
+      displayOrder?: number;
+      isActive?: boolean;
+    },
+  ): Promise<CategorySummary> {
+    const existing = await this.prisma.category.findUnique({ where: { id } });
+    if (!existing) {
+      throw new NotFoundException(`Category with ID '${id}' not found.`);
+    }
+
+    const updateData: Prisma.CategoryUpdateInput = {};
+    if (data.name !== undefined) updateData.name = data.name.trim();
+    if (data.slug !== undefined) updateData.slug = data.slug.trim();
+    if (data.description !== undefined) updateData.description = data.description?.trim() || null;
+    if (data.icon !== undefined) updateData.icon = data.icon?.trim() || null;
+    if (data.imageUrl !== undefined) (updateData as any).imageUrl = data.imageUrl?.trim() || null;
+    if (data.featured !== undefined) updateData.featured = data.featured;
+    if (data.displayOrder !== undefined) updateData.displayOrder = data.displayOrder;
+    if (data.isActive !== undefined) updateData.isActive = data.isActive;
+
+    const updated = await this.prisma.category.update({
+      where: { id },
+      data: updateData,
+      include: {
+        _count: { select: { products: true } },
+      },
+    });
+
+    return {
+      id: updated.id,
+      name: updated.name,
+      slug: updated.slug,
+      description: updated.description,
+      icon: updated.icon,
+      imageUrl: (updated as any).imageUrl || null,
+      featured: updated.featured,
+      displayOrder: updated.displayOrder,
+      isActive: updated.isActive,
+      productCount: updated._count?.products ?? 0,
+    };
+  }
+
+  /**
    * Fetch menu items with optional category, cuisine, and search filters
    */
   async getMenuItems(query: GetMenuQueryDto): Promise<ProductSummary[]> {
@@ -128,11 +181,24 @@ export class MenuService {
       isActive: true,
     };
 
+    if (query.isAvailable !== undefined) {
+      where.isAvailable = query.isAvailable;
+    }
+
+    if (query.isChefSpecial !== undefined) {
+      where.isChefSpecial = query.isChefSpecial;
+    }
+
+    if (query.isRecommended !== undefined) {
+      where.isRecommended = query.isRecommended;
+    }
+
     // Category filter: match either slug or id
-    if (query.category) {
+    const targetCat = query.categoryId || query.category;
+    if (targetCat) {
       where.category = {
         isActive: true,
-        OR: [{ slug: query.category }, { id: query.category }],
+        OR: [{ slug: targetCat }, { id: targetCat }],
       };
     }
 
@@ -223,6 +289,7 @@ export class MenuService {
         isAvailable: dto.isAvailable ?? true,
         isActive: dto.isActive ?? true,
         isChefSpecial: dto.isChefSpecial ?? false,
+        isRecommended: dto.isRecommended ?? false,
         cuisine: (dto.cuisine as any) || "COMMON",
         isSpicy: dto.isSpicy ?? false,
         preparationTime: dto.preparationTime || "15 mins",
@@ -266,6 +333,7 @@ export class MenuService {
     if (dto.isAvailable !== undefined) updateData.isAvailable = dto.isAvailable;
     if (dto.isActive !== undefined) updateData.isActive = dto.isActive;
     if (dto.isChefSpecial !== undefined) updateData.isChefSpecial = dto.isChefSpecial;
+    if (dto.isRecommended !== undefined) updateData.isRecommended = dto.isRecommended;
     if (dto.cuisine !== undefined) updateData.cuisine = dto.cuisine as any;
     if (dto.isSpicy !== undefined) updateData.isSpicy = dto.isSpicy;
     if (dto.preparationTime !== undefined) updateData.preparationTime = dto.preparationTime;
@@ -352,6 +420,7 @@ export class MenuService {
       isAvailable: item.isAvailable,
       isActive: item.isActive,
       isChefSpecial: item.isChefSpecial,
+      isRecommended: (item as any).isRecommended ?? false,
       cuisine: item.cuisine as RegionalCuisine,
       isSpicy: item.isSpicy,
       preparationTime: item.preparationTime,

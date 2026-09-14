@@ -216,6 +216,7 @@ model Category {
   slug         String    @unique
   description  String?
   icon         String?
+  imageUrl     String?
   featured     Boolean   @default(false)
   displayOrder Int       @default(0)
   isActive     Boolean   @default(true)
@@ -242,6 +243,7 @@ model Product {
   isAvailable          Boolean         @default(true)
   isActive             Boolean         @default(true)
   isChefSpecial        Boolean         @default(false)
+  isRecommended        Boolean         @default(false)
   cuisine              RegionalCuisine @default(COMMON)
   isSpicy              Boolean         @default(false)
   preparationTime      String?         @default("15-20 mins")
@@ -260,6 +262,7 @@ model Product {
   @@index([cuisine])
   @@index([isActive, isAvailable])
   @@index([isChefSpecial])
+  @@index([isRecommended])
   @@map("products")
 }
 

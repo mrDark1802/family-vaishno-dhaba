@@ -40,6 +40,15 @@ export class MenuController {
     return this.menuService.createCategory(dto);
   }
 
+  @Patch("categories/:id")
+  @UseGuards(OptionalAuthGuard)
+  async updateCategory(
+    @Param("id") id: string,
+    @Body() dto: Partial<CreateCategoryDto>,
+  ): Promise<CategorySummary> {
+    return this.menuService.updateCategory(id, dto);
+  }
+
   @Delete("categories/:id")
   @UseGuards(OptionalAuthGuard)
   async deleteCategory(@Param("id") id: string): Promise<{ success: boolean; message: string }> {

@@ -68,11 +68,11 @@ async function bootstrap() {
   // Global API Prefix (excluding root route)
   app.setGlobalPrefix("api", { exclude: ["/"] });
 
-  // Global Validation Pipe with strict whitelisting
+  // Global Validation Pipe with tolerant query parsing
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true,
+      forbidNonWhitelisted: false,
       transform: true,
       transformOptions: {
         enableImplicitConversion: true,

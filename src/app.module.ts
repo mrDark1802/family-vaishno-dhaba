@@ -15,6 +15,7 @@ import { PaymentsModule } from "./modules/payments/payments.module";
 import { VerificationModule } from "./modules/verification/verification.module";
 import { CouponsModule } from "./modules/coupons/coupons.module";
 import { BannersModule } from "./modules/banners/banners.module";
+import { UploadModule } from "./modules/upload/upload.module";
 import { AllExceptionsFilter } from "./common/filters/http-exception.filter";
 import { TransformInterceptor } from "./common/interceptors/transform.interceptor";
 import { LoggingInterceptor } from "./common/interceptors/logging.interceptor";
@@ -47,6 +48,7 @@ import { LoggingInterceptor } from "./common/interceptors/logging.interceptor";
     VerificationModule,
     CouponsModule,
     BannersModule,
+    UploadModule,
   ],
 
   controllers: [AppController],

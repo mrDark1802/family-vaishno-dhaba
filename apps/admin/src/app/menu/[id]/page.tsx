@@ -1,8 +1,5 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { useRouter, useParams } from "next/navigation";
+import { Link, useRouter, useParams } from "../../../context/navigation-context";
 import { Button, Input, useToast } from "@repo/ui";
 import { ArrowLeft, Sparkles, CheckCircle2, Loader2, Info } from "lucide-react";
 import { CategorySummary, RegionalCuisine } from "@repo/types";

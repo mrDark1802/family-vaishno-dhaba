@@ -1,7 +1,5 @@
-"use client";
-
 import React, { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
+import { Link } from "../../context/navigation-context";
 import { OrderResponse, OrderStatus } from "@repo/types";
 import {
   fetchAdminOrdersApi,

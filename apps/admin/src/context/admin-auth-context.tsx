@@ -1,7 +1,5 @@
-"use client";
-
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "./navigation-context";
 import { CustomerProfile, UserRole } from "@repo/types";
 import {
   fetchAdminProfileApi,

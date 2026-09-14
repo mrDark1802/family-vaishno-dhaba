@@ -1,7 +1,5 @@
-"use client";
-
 import React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname } from "../../context/navigation-context";
 import { AdminSidebar } from "./admin-sidebar";
 import { AdminHeader } from "./admin-header";
 import { ToastProvider } from "@repo/ui";

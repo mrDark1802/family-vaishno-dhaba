@@ -1,8 +1,5 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { Link, useParams, useRouter } from "../../../context/navigation-context";
 import { OrderResponse, OrderStatus } from "@repo/types";
 import {
   fetchOrderDetailsApi,

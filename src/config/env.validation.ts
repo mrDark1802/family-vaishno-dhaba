@@ -22,6 +22,10 @@ class EnvironmentVariables {
   @IsOptional()
   API_PORT: number = 4000;
 
+  @IsNumber()
+  @IsOptional()
+  PORT?: number;
+
   @IsString()
   @IsOptional()
   DATABASE_URL: string =

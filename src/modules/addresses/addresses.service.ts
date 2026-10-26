@@ -62,6 +62,8 @@ export class AddressesService {
           city: dto.city?.trim() || "Kangra",
           state: dto.state?.trim() || "Himachal Pradesh",
           postalCode: dto.postalCode.trim(),
+          latitude: dto.latitude ?? null,
+          longitude: dto.longitude ?? null,
           isDefault: shouldBeDefault,
         },
       });
@@ -117,6 +119,8 @@ export class AddressesService {
           state: dto.state !== undefined ? dto.state.trim() : undefined,
           postalCode:
             dto.postalCode !== undefined ? dto.postalCode.trim() : undefined,
+          latitude: dto.latitude !== undefined ? dto.latitude : undefined,
+          longitude: dto.longitude !== undefined ? dto.longitude : undefined,
           isDefault: dto.isDefault !== undefined ? dto.isDefault : undefined,
         },
       });
@@ -206,6 +210,8 @@ export class AddressesService {
       city: addr.city,
       state: addr.state,
       postalCode: addr.postalCode,
+      latitude: addr.latitude != null ? Number(addr.latitude) : null,
+      longitude: addr.longitude != null ? Number(addr.longitude) : null,
       isDefault: addr.isDefault,
       createdAt:
         addr.createdAt instanceof Date

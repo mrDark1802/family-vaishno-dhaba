@@ -48,6 +48,8 @@ export interface CreateOrderDto {
   landmark?: string;
   city?: string;
   pincode?: string;
+  deliveryLatitude?: number;
+  deliveryLongitude?: number;
   notes?: string;
   paymentMethod?: PaymentMethod;
   couponCode?: string;
@@ -109,6 +111,8 @@ export interface OrderResponse {
   landmark?: string | null;
   city?: string | null;
   pincode?: string | null;
+  deliveryLatitude?: number | null;
+  deliveryLongitude?: number | null;
   status: OrderStatus;
   orderType: OrderType;
   paymentStatus: PaymentStatus;

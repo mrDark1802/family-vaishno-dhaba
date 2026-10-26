@@ -1,4 +1,4 @@
-import { plainToInstance } from "class-transformer";
+import { plainToInstance, Type } from "class-transformer";
 import {
   IsEnum,
   IsNumber,
@@ -18,10 +18,12 @@ class EnvironmentVariables {
   @IsOptional()
   NODE_ENV: Environment = Environment.Development;
 
+  @Type(() => Number)
   @IsNumber()
   @IsOptional()
   API_PORT: number = 4000;
 
+  @Type(() => Number)
   @IsNumber()
   @IsOptional()
   PORT?: number;
@@ -49,10 +51,12 @@ class EnvironmentVariables {
   @IsOptional()
   CORS_ORIGIN: string = "http://localhost:3000,http://localhost:3001";
 
+  @Type(() => Number)
   @IsNumber()
   @IsOptional()
   THROTTLE_TTL: number = 60;
 
+  @Type(() => Number)
   @IsNumber()
   @IsOptional()
   THROTTLE_LIMIT: number = 100;

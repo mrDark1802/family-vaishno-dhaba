@@ -2,6 +2,7 @@ export enum UserRole {
   CUSTOMER = "CUSTOMER",
   STAFF = "STAFF",
   KITCHEN = "KITCHEN",
+  DRIVER = "DRIVER",
   ADMIN = "ADMIN",
 }
 
@@ -51,6 +52,8 @@ export interface AddressResponse {
   city: string;
   state: string;
   postalCode: string;
+  latitude?: number | null;
+  longitude?: number | null;
   isDefault: boolean;
   createdAt: string;
   updatedAt: string;
@@ -66,6 +69,8 @@ export interface CreateAddressDto {
   city?: string;
   state?: string;
   postalCode: string;
+  latitude?: number;
+  longitude?: number;
   isDefault?: boolean;
 }
 

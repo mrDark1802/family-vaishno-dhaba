@@ -3,6 +3,7 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -100,6 +101,14 @@ export class CreateOrderDto {
     message: "Postal PIN code must be a 6-digit number",
   })
   pincode?: string;
+
+  @IsOptional()
+  @IsNumber()
+  deliveryLatitude?: number;
+
+  @IsOptional()
+  @IsNumber()
+  deliveryLongitude?: number;
 
   @IsOptional()
   @IsString()

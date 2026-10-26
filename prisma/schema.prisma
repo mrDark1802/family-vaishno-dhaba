@@ -19,7 +19,29 @@ enum UserRole {
   CUSTOMER
   STAFF
   KITCHEN
+  DRIVER
   ADMIN
+}
+
+enum DriverStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
+
+enum DriverAvailability {
+  ONLINE
+  OFFLINE
+  BUSY
+}
+
+enum DeliveryStatus {
+  ASSIGNED
+  ACCEPTED
+  PICKED_UP
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
 }
 
 enum RegionalCuisine {
@@ -88,6 +110,7 @@ model User {
   twoFactorAuth       TwoFactorAuth?
   twoFactorChallenges TwoFactorChallenge[]
   oauthAccounts       OAuthAccount[]
+  driverProfile       DriverProfile?
 
   @@index([phone])
   @@index([email])
@@ -199,6 +222,8 @@ model Address {
   city          String   @default("Kangra")
   state         String   @default("Himachal Pradesh")
   postalCode    String   @default("176001")
+  latitude      Float?
+  longitude     Float?
   isDefault     Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -277,6 +302,8 @@ model Order {
   landmark        String?
   city            String?
   pincode         String?
+  deliveryLatitude  Float?
+  deliveryLongitude Float?
   status          OrderStatus   @default(PENDING)
   orderType       OrderType     @default(DELIVERY)
   paymentStatus   PaymentStatus @default(PENDING)
@@ -297,6 +324,7 @@ model Order {
   user            User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
   items           OrderItem[]
   payments        Payment[]
+  deliveryAssignment DeliveryAssignment?
 
   @@index([orderNumber])
   @@index([userId])
@@ -393,4 +421,96 @@ model Coupon {
   @@index([isActive])
   @@map("coupons")
 }
+
+// -----------------------------------------------------------------------------
+// Delivery & Live Tracking Models
+// -----------------------------------------------------------------------------
+
+model DriverProfile {
+  id                  String             @id @default(cuid())
+  userId              String             @unique
+  status              DriverStatus       @default(PENDING)
+  availability        DriverAvailability @default(OFFLINE)
+  vehicleType         String?            // "BIKE" | "SCOOTER" | "CAR" | "OTHER"
+  vehicleNumber       String?
+  licenseNumber       String?
+  currentLatitude     Float?
+  currentLongitude    Float?
+  currentHeading      Float?
+  currentSpeed        Float?
+  lastLocationUpdate  DateTime?
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignments         DeliveryAssignment[]
+  locationHistory     DeliveryLocationHistory[]
+
+  @@index([status])
+  @@index([availability])
+  @@index([userId])
+  @@map("driver_profiles")
+}
+
+model DeliveryAssignment {
+  id                   String             @id @default(cuid())
+  orderId              String             @unique
+  driverId             String
+  status               DeliveryStatus     @default(ASSIGNED)
+  assignedAt           DateTime           @default(now())
+  acceptedAt           DateTime?
+  pickedUpAt           DateTime?
+  deliveredAt          DateTime?
+  cancelledAt          DateTime?
+  cancellationReason   String?
+  estimatedDurationMin Int?
+  estimatedDistanceKm  Float?
+  routePolyline        String?            @db.Text
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  order                Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  driver               DriverProfile      @relation(fields: [driverId], references: [id], onDelete: Restrict)
+  statusHistory        DeliveryStatusHistory[]
+
+  @@index([orderId])
+  @@index([driverId])
+  @@index([status])
+  @@map("delivery_assignments")
+}
+
+model DeliveryStatusHistory {
+  id           String             @id @default(cuid())
+  assignmentId String
+  status       DeliveryStatus
+  notes        String?
+  changedById  String?
+  createdAt    DateTime           @default(now())
+
+  assignment   DeliveryAssignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  @@index([assignmentId])
+  @@index([createdAt])
+  @@map("delivery_status_history")
+}
+
+model DeliveryLocationHistory {
+  id           String        @id @default(cuid())
+  driverId     String
+  assignmentId String?
+  latitude     Float
+  longitude    Float
+  heading      Float?
+  speed        Float?
+  accuracy     Float?
+  recordedAt   DateTime      @default(now())
+
+  driver       DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
+
+  @@index([driverId])
+  @@index([assignmentId])
+  @@index([recordedAt])
+  @@map("delivery_location_history")
+}
+
 

@@ -4,4 +4,5 @@ export * from "./menu";
 export * from "./order";
 export * from "./payment";
 export * from "./coupon";
+export * from "./delivery";
 export * from "./ui";

@@ -1,6 +1,7 @@
 import {
   IsBoolean,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -58,6 +59,14 @@ export class CreateAddressDto {
     message: "Postal PIN code must be a 6-digit number",
   })
   postalCode!: string;
+
+  @IsOptional()
+  @IsNumber()
+  latitude?: number;
+
+  @IsOptional()
+  @IsNumber()
+  longitude?: number;
 
   @IsOptional()
   @IsBoolean()

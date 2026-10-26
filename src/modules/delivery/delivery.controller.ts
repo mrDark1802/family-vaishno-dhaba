@@ -20,6 +20,7 @@ import { Roles } from "../../common/decorators/roles.decorator";
 import { CurrentUser } from "../../common/decorators/current-user.decorator";
 import { CustomerProfile, UserRole } from "../../types";
 import { ActivateDriverDto } from "./dto/activate-driver.dto";
+import { CreateDriverDto } from "./dto/create-driver.dto";
 import { UpdateDriverStatusDto } from "./dto/update-driver-status.dto";
 import { UpdateAvailabilityDto } from "./dto/update-availability.dto";
 import { AssignDriverDto, ReassignDriverDto } from "./dto/assign-driver.dto";
@@ -49,6 +50,23 @@ export class DeliveryController {
   @Roles(UserRole.ADMIN)
   async searchCandidateUsers(@Query("q") query: string) {
     return this.deliveryService.searchCandidateUsers(query);
+  }
+
+  @Post("admin/drivers/create")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async createAndActivateDriver(
+    @Body() dto: CreateDriverDto,
+    @CurrentUser() user: CustomerProfile,
+    @Req() req: Request,
+  ) {
+    return this.deliveryService.createAndActivateDriver(
+      dto,
+      user.id,
+      req.ip,
+      req.headers["user-agent"],
+    );
   }
 
   @Post("admin/drivers/activate")

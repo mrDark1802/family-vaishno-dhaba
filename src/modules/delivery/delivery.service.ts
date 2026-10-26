@@ -7,6 +7,7 @@ import {
   Inject,
   forwardRef,
 } from "@nestjs/common";
+import * as argon2 from "argon2";
 import { PrismaService } from "../../database/prisma.service";
 import { RoutingService, LatLng } from "./routing.service";
 import { DeliveryGateway } from "./delivery.gateway";
@@ -20,6 +21,7 @@ import {
   DeliveryTrackingResponse,
 } from "../../types";
 import { ActivateDriverDto } from "./dto/activate-driver.dto";
+import { CreateDriverDto } from "./dto/create-driver.dto";
 import { UpdateDriverStatusDto } from "./dto/update-driver-status.dto";
 import { AssignDriverDto, ReassignDriverDto } from "./dto/assign-driver.dto";
 import { RecordLocationDto } from "./dto/record-location.dto";
@@ -89,6 +91,138 @@ export class DeliveryService {
     });
 
     return users;
+  }
+
+  /**
+   * Directly create or onboard a brand new driver account from the admin operations portal.
+   */
+  async createAndActivateDriver(
+    dto: CreateDriverDto,
+    adminUserId: string,
+    ipAddress?: string,
+    userAgent?: string,
+  ): Promise<DriverProfileSummary> {
+    const rawPhone = dto.phone.replace(/[^0-9]/g, "");
+    const normalizedPhone =
+      rawPhone.length === 10 ? rawPhone : rawPhone.slice(-10);
+
+    if (normalizedPhone.length < 10) {
+      throw new BadRequestException("Please enter a valid 10-digit mobile number.");
+    }
+
+    const normalizedEmail = dto.email
+      ? dto.email.toLowerCase().trim()
+      : null;
+
+    // Check if user already exists with this phone or email
+    const existingUser = await this.prisma.user.findFirst({
+      where: {
+        OR: [
+          { phone: normalizedPhone },
+          ...(normalizedEmail ? [{ email: normalizedEmail }] : []),
+        ],
+      },
+      include: { driverProfile: true },
+    });
+
+    const result = await this.prisma.$transaction(async (tx) => {
+      let targetUser = existingUser;
+
+      if (!targetUser) {
+        // Create new user account with DRIVER role
+        const defaultPassword = dto.password || "driver@123";
+        const passwordHash = await argon2.hash(defaultPassword, {
+          type: argon2.argon2id,
+          memoryCost: 65536,
+          timeCost: 3,
+        });
+
+        targetUser = await tx.user.create({
+          data: {
+            name: dto.name.trim(),
+            phone: normalizedPhone,
+            email: normalizedEmail,
+            passwordHash,
+            role: UserRole.DRIVER,
+            isActive: true,
+          },
+          include: { driverProfile: true },
+        });
+
+        this.logger.log(`Created new driver user account: [ID: ${targetUser.id}, Phone: ${normalizedPhone}]`);
+      } else {
+        // Promote existing user to DRIVER role if not ADMIN
+        if (targetUser.role !== UserRole.ADMIN) {
+          await tx.user.update({
+            where: { id: targetUser.id },
+            data: {
+              role: UserRole.DRIVER,
+              name: dto.name.trim() || targetUser.name,
+            },
+          });
+        }
+      }
+
+      // Upsert Driver Profile
+      const profile = await tx.driverProfile.upsert({
+        where: { userId: targetUser.id },
+        create: {
+          userId: targetUser.id,
+          status: DriverStatus.ACTIVE,
+          availability: DriverAvailability.OFFLINE,
+          vehicleType: dto.vehicleType?.trim() || "BIKE",
+          vehicleNumber: dto.vehicleNumber?.trim() || null,
+          licenseNumber: dto.licenseNumber?.trim() || null,
+        },
+        update: {
+          status: DriverStatus.ACTIVE,
+          vehicleType:
+            dto.vehicleType !== undefined
+              ? dto.vehicleType?.trim() || null
+              : undefined,
+          vehicleNumber:
+            dto.vehicleNumber !== undefined
+              ? dto.vehicleNumber?.trim() || null
+              : undefined,
+          licenseNumber:
+            dto.licenseNumber !== undefined
+              ? dto.licenseNumber?.trim() || null
+              : undefined,
+        },
+        include: {
+          user: {
+            select: { id: true, name: true, phone: true, email: true },
+          },
+        },
+      });
+
+      // Write Audit Log
+      await tx.auditLog.create({
+        data: {
+          userId: adminUserId,
+          action: "DRIVER_CREATED_AND_ACTIVATED",
+          entity: "DriverProfile",
+          entityId: profile.id,
+          metadata: {
+            driverId: profile.id,
+            targetUserId: targetUser.id,
+            phone: normalizedPhone,
+            vehicleType: profile.vehicleType,
+            vehicleNumber: profile.vehicleNumber,
+          },
+          ipAddress: ipAddress || null,
+          userAgent: userAgent || null,
+        },
+      });
+
+      return profile;
+    });
+
+    this.logger.log(
+      `Admin [${adminUserId}] created/activated driver [${result.id}] for user [${result.userId}]`,
+    );
+
+    return this.mapDriverProfile(result);
   }
 
   /**

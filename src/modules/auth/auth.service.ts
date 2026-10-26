@@ -313,10 +313,11 @@ export class AuthService {
    * Standard cookie options for HTTP-only session cookie
    */
   public getCookieOptions() {
+    const isProd = process.env.NODE_ENV === "production";
     return {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax" as const,
+      secure: isProd,
+      sameSite: (isProd ? "none" : "lax") as "none" | "lax",
       path: "/",
       maxAge: this.SESSION_TTL_MS,
     };

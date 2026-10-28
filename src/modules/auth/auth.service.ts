@@ -170,6 +170,83 @@ export class AuthService {
   }
 
   /**
+   * Fast phone verification / login for Mobile App.
+   * Resolves existing user (Customer, Driver, or Admin) or creates a new customer.
+   */
+  async phoneLogin(
+    phone: string,
+    name?: string,
+    reqInfo?: { ip?: string; userAgent?: string },
+  ): Promise<SessionResult> {
+    const rawPhone = phone.replace(/[^0-9]/g, "");
+    const normalizedPhone =
+      rawPhone.length === 10 ? rawPhone : rawPhone.slice(-10);
+
+    if (normalizedPhone.length < 10) {
+      throw new BadRequestException(
+        "Please enter a valid 10-digit mobile number.",
+      );
+    }
+
+    let user = await this.prisma.user.findFirst({
+      where: { phone: normalizedPhone },
+      include: {
+        driverProfile: true,
+      },
+    });
+
+    if (!user) {
+      // Auto-register new customer
+      const defaultPassword = "fvd@" + normalizedPhone.slice(-4);
+      const passwordHash = await argon2.hash(defaultPassword, {
+        type: argon2.argon2id,
+        memoryCost: 65536,
+        timeCost: 3,
+      });
+
+      user = await this.prisma.user.create({
+        data: {
+          name: name?.trim() || "Dhaba Guest",
+          phone: normalizedPhone,
+          passwordHash,
+          role: PrismaUserRole.CUSTOMER,
+          isActive: true,
+        },
+        include: {
+          driverProfile: true,
+        },
+      });
+
+      this.logger.log(
+        `New user auto-registered via phone login: [ID: ${user.id}, Phone: ${normalizedPhone}]`,
+      );
+    } else {
+      if (!user.isActive) {
+        throw new UnauthorizedException(
+          "Your account is suspended or disabled. Please contact Dhaba support.",
+        );
+      }
+      if (
+        name?.trim() &&
+        (!user.name || user.name === "Customer" || user.name === "Dhaba Guest")
+      ) {
+        await this.prisma.user.update({
+          where: { id: user.id },
+          data: { name: name.trim() },
+        });
+        user.name = name.trim();
+      }
+    }
+
+    const rawToken = await this.createSession(user.id, reqInfo);
+
+    return {
+      user: this.mapUserToProfile(user, false),
+      rawToken,
+    };
+  }
+
+  /**
    * Establish a full authenticated session after 2FA verification
    */
   async establishSessionForUser(

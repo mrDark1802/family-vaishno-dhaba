@@ -18,6 +18,7 @@ import { GoogleAuthService, sanitizeReturnUrl } from "./google-auth.service";
 import { AppleAuthService } from "./apple-auth.service";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
+import { PhoneLoginDto } from "./dto/phone-login.dto";
 import { Verify2FASetupDto } from "./dto/verify-2fa-setup.dto";
 import { Verify2FALoginDto } from "./dto/verify-2fa-login.dto";
 import { Verify2FARecoveryDto } from "./dto/verify-2fa-recovery.dto";
@@ -116,6 +117,37 @@ export class AuthController {
       user: result.user!,
       token: result.rawToken || undefined,
       requiresTwoFactor: false,
+      success: true,
+    };
+  }
+
+  @Post("phone-login")
+  @HttpCode(HttpStatus.OK)
+  async phoneLogin(
+    @Body() dto: PhoneLoginDto,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{
+    user: CustomerProfile;
+    token?: string;
+    success: boolean;
+  }> {
+    const result = await this.authService.phoneLogin(dto.phone, dto.name, {
+      ip: req.ip,
+      userAgent: req.headers["user-agent"],
+    });
+
+    if (result.rawToken) {
+      res.cookie(
+        "fvd_session",
+        result.rawToken,
+        this.authService.getCookieOptions(),
+      );
+    }
+
+    return {
+      user: result.user!,
+      token: result.rawToken || undefined,
       success: true,
     };
   }

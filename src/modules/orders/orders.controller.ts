@@ -91,10 +91,10 @@ export class OrdersController {
     @CurrentUser() user: CustomerProfile,
     @Query("page") pageQuery?: string,
     @Query("limit") limitQuery?: string,
-  ): Promise<PaginatedOrderResponse> {
+  ): Promise<any> {
     const page = pageQuery ? parseInt(pageQuery, 10) : 1;
     const limit = limitQuery ? parseInt(limitQuery, 10) : 20;
-    return this.ordersService.getUserOrders(user.id, page, limit);
+    return this.ordersService.getUserOrders(user.id, user.phone, page, limit);
   }
 
   /**

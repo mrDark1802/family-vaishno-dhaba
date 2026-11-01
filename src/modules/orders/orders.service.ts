@@ -330,10 +330,12 @@ export class OrdersService {
    */
   async getUserOrders(
     userId: string,
+    userPhone?: string,
     page = 1,
     limit = 20,
   ): Promise<{
-    items: OrderSummary[];
+    orders: any[];
+    items: any[];
     pagination: {
       page: number;
       limit: number;
@@ -346,16 +348,34 @@ export class OrdersService {
     const safeLimit = Math.min(50, Math.max(1, limit));
     const skip = (safePage - 1) * safeLimit;
 
+    // Link any orphaned orders created with this phone number to the user's account
+    if (userPhone) {
+      await this.prisma.order
+        .updateMany({
+          where: { customerPhone: userPhone, userId: null },
+          data: { userId },
+        })
+        .catch(() => {});
+    }
+
+    const whereClause = userPhone
+      ? { OR: [{ userId }, { customerPhone: userPhone }] }
+      : { userId };
+
     const [total, orders] = await Promise.all([
-      this.prisma.order.count({ where: { userId } }),
+      this.prisma.order.count({ where: whereClause }),
       this.prisma.order.findMany({
-        where: { userId },
+        where: whereClause,
         orderBy: [{ createdAt: "desc" }, { id: "desc" }],
         skip,
         take: safeLimit,
         include: {
           items: {
-            select: { quantity: true },
+            include: {
+              product: {
+                select: { id: true, name: true, price: true, imageUrl: true },
+              },
+            },
           },
         },
       }),
@@ -364,7 +384,7 @@ export class OrdersService {
     const totalPages = Math.ceil(total / safeLimit) || 1;
     const hasNextPage = safePage < totalPages;
 
-    const items = orders.map((o) => ({
+    const formattedOrders = orders.map((o) => ({
       id: o.id,
       orderNumber: o.orderNumber,
       status: o.status as OrderStatus,
@@ -374,10 +394,18 @@ export class OrdersService {
       itemCount: o.items.reduce((sum, item) => sum + item.quantity, 0),
       createdAt:
         o.createdAt instanceof Date ? o.createdAt.toISOString() : o.createdAt,
+      items: o.items.map((i) => ({
+        id: i.id,
+        quantity: i.quantity,
+        portion: i.portion,
+        price: Number(i.unitPrice),
+        dishName: i.product?.name || "Dhaba Special",
+      })),
     }));
 
     return {
-      items,
+      orders: formattedOrders,
+      items: formattedOrders,
       pagination: {
         page: safePage,
         limit: safeLimit,

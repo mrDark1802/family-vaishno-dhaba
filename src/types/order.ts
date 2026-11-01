@@ -90,13 +90,16 @@ export interface OrderItemResponse {
   id: string;
   productId: string | null;
   productName: string;
+  dishName?: string;
   portion?: PortionOption | null;
   baseUnitPrice: number;
   customization?: string | null;
   customizationPrice: number;
   unitPrice: number;
+  price?: number;
   quantity: number;
   subtotal: number;
+  totalPrice?: number;
   notes?: string | null;
 }
 

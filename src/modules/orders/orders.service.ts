@@ -628,19 +628,27 @@ export class OrdersService {
         order.updatedAt instanceof Date
           ? order.updatedAt.toISOString()
           : order.updatedAt,
-      items: (order.items || []).map((item: any) => ({
-        id: item.id,
-        productId: item.productId || null,
-        productName: item.productName,
-        portion: (item.portion as PortionOption) || "FULL",
-        baseUnitPrice: Number(item.baseUnitPrice || item.unitPrice),
-        customization: item.customization || null,
-        customizationPrice: Number(item.customizationPrice || 0),
-        unitPrice: Number(item.unitPrice),
-        quantity: item.quantity,
-        subtotal: Number(item.subtotal),
-        notes: item.notes || null,
-      })),
+      items: (order.items || []).map((item: any) => {
+        const uPrice = Number(item.unitPrice || item.price || 0);
+        const qty = Number(item.quantity) || 1;
+        const lineTotal = Number(item.subtotal || item.totalPrice || uPrice * qty);
+        return {
+          id: item.id,
+          productId: item.productId || null,
+          productName: item.productName || item.dishName || 'Special Dish',
+          dishName: item.productName || item.dishName || 'Special Dish',
+          portion: (item.portion as PortionOption) || 'FULL',
+          baseUnitPrice: Number(item.baseUnitPrice || uPrice),
+          customization: item.customization || null,
+          customizationPrice: Number(item.customizationPrice || 0),
+          unitPrice: uPrice,
+          price: uPrice,
+          quantity: qty,
+          subtotal: lineTotal,
+          totalPrice: lineTotal,
+          notes: item.notes || null,
+        };
+      }),
     };
   }
 }
